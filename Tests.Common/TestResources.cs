@@ -2,6 +2,7 @@
 {
     public class TestResources
     {
-        public const string AzureEmulator = "AzureEmulator";
+        public const string AzureQueues = "AzureQueues";
+        public const string AzureStorage = "AzureStorage";
     }
 }

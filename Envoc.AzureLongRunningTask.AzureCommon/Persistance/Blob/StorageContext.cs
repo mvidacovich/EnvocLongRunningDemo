@@ -25,7 +25,7 @@ namespace Envoc.Azure.Common.Persistance.Blob
             CreateIfNotExist();
             ValidateEntity(entity);
 
-            // No page blobs for now (only block). See cheat sheet for usages
+            // No page blobs for now (only block). See cheat sheet for more features
             var blob = container.GetBlockBlobReference(entity.Name);
             blob.Properties.ContentType = entity.ContentType;
             blob.UploadFromStream(entity.Stream);
@@ -79,7 +79,7 @@ namespace Envoc.Azure.Common.Persistance.Blob
             // See cheat sheet, azure limits the access time of non revokable SAS
             if (length > TimeSpan.FromHours(1))
             {
-                throw new InvalidOperationException("Public read url cannot be live for more than 1 hour.");
+                throw new ArgumentException("Public read url cannot be live for more than 1 hour.");
             }
 
             var blob = container.GetBlockBlobReference(name);

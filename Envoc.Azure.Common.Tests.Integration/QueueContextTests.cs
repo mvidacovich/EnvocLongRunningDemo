@@ -10,7 +10,7 @@ using Tests.Common;
 
 namespace Envoc.Azure.Common.Tests.Integration
 {
-    [ExclusivelyUses(TestResources.AzureEmulator)]
+    [ExclusivelyUses(TestResources.AzureQueues)]
     [TestClass]
     public class QueueContextTests
     {
