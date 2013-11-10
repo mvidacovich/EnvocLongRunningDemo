@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Envoc.Azure.Common.Service
 {
-    public class QueueProcessorBase<T>
+    public abstract class QueueProcessorBase<T>
     {
         private readonly object queueSync = new object();
         private readonly IQueueContext<T> queueContext;
         private TimeSpan queuePollWait = TimeSpan.FromSeconds(10);
 
-        public QueueProcessorBase(IQueueContext<T> queueContext)
+        protected QueueProcessorBase(IQueueContext<T> queueContext)
         {
             this.queueContext = queueContext;
         }
@@ -88,10 +88,7 @@ namespace Envoc.Azure.Common.Service
             }
         }
 
-        protected virtual bool Process(IQueueEntity<T> job, CancellationToken processJobToken)
-        {
-            return false;
-        }
+        protected abstract bool Process(IQueueEntity<T> job, CancellationToken processJobToken);
 
         private static TimeSpan GetPollTimeInbounds(TimeSpan value)
         {
