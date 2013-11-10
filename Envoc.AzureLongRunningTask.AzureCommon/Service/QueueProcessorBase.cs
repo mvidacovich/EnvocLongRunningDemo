@@ -8,7 +8,11 @@ namespace Envoc.Azure.Common.Service
 {
     public abstract class QueueProcessorBase<T>
     {
-        private readonly object queueSync = new object();
+        // ReSharper disable StaticFieldInGenericType 
+        // desired behaviour same <T> should be synced, different <T> should not
+        private readonly static object QueueSync = new object();
+        // ReSharper restore StaticFieldInGenericType
+
         private readonly IQueueContext<T> queueContext;
         private TimeSpan queuePollWait = TimeSpan.FromSeconds(10);
 
@@ -33,7 +37,7 @@ namespace Envoc.Azure.Common.Service
             while (!runToken.IsCancellationRequested)
             {
                 IQueueEntity<T> job;
-                lock (queueSync)
+                lock (QueueSync)
                 {
                     job = queueContext.Dequeue();
                 }
@@ -54,13 +58,25 @@ namespace Envoc.Azure.Common.Service
 
                 var taskArray = new [] { processJobTask, refreshJobTask };
 
-                var finished = Task.WaitAny(taskArray, runToken);
-                refreshJobToken.Cancel();
-                processJobToken.Cancel();
+                int finished;
+                try
+                {
+                    finished = Task.WaitAny(taskArray, runToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                finally
+                {
+                    refreshJobToken.Cancel();
+                    processJobToken.Cancel();
+                }
 
                 if (finished == 0 && processJobTask.Result)
                 {
-                    lock (queueSync)
+                    refreshJobTask.Wait();
+                    lock (QueueSync)
                     {
                         queueContext.MarkCompleted(job);
                     }
@@ -75,15 +91,15 @@ namespace Envoc.Azure.Common.Service
 
             while (!refreshJobToken.IsCancellationRequested)
             {
-                if (!refreshJobToken.WaitHandle.WaitOne(delay))
+                if (refreshJobToken.WaitHandle.WaitOne(delay))
                 {
                     return;
                 }
 
-                lock (queueSync)
+                lock (QueueSync)
                 {
                     delay = queueContext.Renew(job);
-                    delay -= TimeSpan.FromMilliseconds(delay.TotalMilliseconds*0.3);
+                    delay -= TimeSpan.FromMilliseconds(delay.TotalMilliseconds * 0.3);
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿using Envoc.Azure.Common.Persistance;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Envoc.Azure.Common.Persistance;
 using Envoc.Azure.Common.Persistance.Queues;
 using Envoc.Core.UnitTests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +24,7 @@ namespace Envoc.Azure.Common.Tests.Integration.Service
         {
             queue = new QueueContext<FakeTask>(new AzureContext())
             {
-                VisibilityTimeout = TimeSpan.FromSeconds(1)
+                VisibilityTimeout = TimeSpan.FromSeconds(5)
             };
             target = new FakeTaskProcessor(queue);
         }
@@ -34,7 +36,7 @@ namespace Envoc.Azure.Common.Tests.Integration.Service
         }
 
         [TestClass]
-        public class ProcessMethod : QueueProcessorBaseTests
+        public class RunMethod : QueueProcessorBaseTests
         {
             [TestMethod]
             public void WithNoJobsSpinsForever()
@@ -77,11 +79,11 @@ namespace Envoc.Azure.Common.Tests.Integration.Service
             public void WithSeveralShortJobsCompletes()
             {
                 // Act
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     queue.Enqueue(new FakeTask
                     {
-                        Duration = TimeSpan.FromMilliseconds(1)
+                        Duration = TimeSpan.FromMilliseconds(100)
                     });
                 }
                 var tokenSource = new CancellationTokenSource();
@@ -94,6 +96,37 @@ namespace Envoc.Azure.Common.Tests.Integration.Service
                 promise.Wait();
                 promise.IsCompleted.ShouldBe(true);
                 stopwatch.ElapsedMilliseconds.ShouldBeLessThan(1500);
+                queue.Count(true).ShouldBe(0);
+            }
+
+            [TestMethod]
+            public void CalledSeveralTimesReturnsEventually()
+            {
+                // Arrange
+                var taskCount = 10;
+                var tokenSource = new CancellationTokenSource();
+                var tasks = new Task[taskCount];
+                target.QueuePollWait = TimeSpan.FromMilliseconds(10);
+                for (int i = 0; i < taskCount; i++)
+                {
+                    tasks[i] = target.Run(tokenSource.Token);
+                }
+
+                // Act
+                for (int i = 0; i < taskCount; i++)
+                {
+                    queue.Enqueue(new FakeTask
+                    {
+                        Duration = TimeSpan.FromMilliseconds(500)
+                    });
+                }
+
+                // Assert
+                Thread.Sleep(1200);
+                var timer = Stopwatch.StartNew();
+                tokenSource.Cancel();
+                Task.WaitAll(tasks);
+                timer.ElapsedMilliseconds.ShouldBeLessThan(500);
                 queue.Count(true).ShouldBe(0);
             }
         }
