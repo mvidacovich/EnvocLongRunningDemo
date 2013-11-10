@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Threading;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Envoc.AzureLongRunningTask.Web.Controllers
 {
@@ -6,23 +9,20 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
-
             return View();
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public string UploadFile(HttpPostedFileBase file, string id, string name, int? chunk, int? chunks)
         {
-            ViewBag.Message = "Your app description page.";
+            if (chunks.HasValue && chunks > 4096)
+            {
+                throw new NotSupportedException("The file is too large.");
+            }
 
-            return View();
-        }
+            Thread.Sleep(100);
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return "ok";
         }
     }
 }

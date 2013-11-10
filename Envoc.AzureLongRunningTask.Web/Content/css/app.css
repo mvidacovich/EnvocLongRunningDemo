@@ -1,0 +1,12 @@
+﻿.drop-area.dragging, .drop-area:hover {
+    background: #F2F9FC;
+    border: 3px #748A98 dashed;
+}
+
+.drop-area {
+    padding: 25px;
+    margin: 10px 0;
+    border: 3px #B4C4CE dashed;
+    border-radius: 12px;
+    display: block;
+}
