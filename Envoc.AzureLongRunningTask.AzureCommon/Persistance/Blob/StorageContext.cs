@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -30,6 +31,35 @@ namespace Envoc.Azure.Common.Persistance.Blob
             blob.Properties.ContentType = entity.ContentType;
             blob.UploadFromStream(entity.Stream);
             blob.SetProperties();
+        }
+
+        public void StoreChunk(T entity, int blockIndex, bool finalize)
+        {
+            CreateIfNotExist();
+            ValidateEntity(entity);
+            if (blockIndex < 0)
+            {
+                throw new ArgumentException("Cannot be negative", "blockIndex");
+            }
+            if (entity.Stream.Length <= 0)
+            {
+                throw new ArgumentException("Stream cannot be empty in block upload", "source");
+            }
+            var blob = container.GetBlockBlobReference(entity.Name);
+            var blockId = Convert.ToBase64String(BitConverter.GetBytes(blockIndex));
+            blob.Properties.ContentType = entity.ContentType;
+            blob.PutBlock(blockId, entity.Stream, null);
+
+            if (finalize)
+            {
+                var blockIds = new List<string>();
+                for (int i = 0; i < blockIndex+1; i++)
+                {
+                    blockIds.Add(Convert.ToBase64String(BitConverter.GetBytes(i)));
+                }
+                blob.PutBlockList(blockIds);
+                blob.SetProperties();
+            }
         }
 
         public T GetBlob(string name)
@@ -102,6 +132,16 @@ namespace Envoc.Azure.Common.Persistance.Blob
             if (ReferenceEquals(entity,null))
             {
                 throw new ArgumentNullException("entity");
+            }
+
+            if (ReferenceEquals(entity.Name, null))
+            {
+                throw new ArgumentNullException("blobName");
+            }
+
+            if (ReferenceEquals(entity.Stream, null))
+            {
+                throw new ArgumentNullException("source");
             }
         }
 

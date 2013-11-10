@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -18,6 +17,7 @@ namespace Envoc.AzureLongRunningTask.Web
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            IocRegistrar.RegisterContainers();
         }
     }
 }

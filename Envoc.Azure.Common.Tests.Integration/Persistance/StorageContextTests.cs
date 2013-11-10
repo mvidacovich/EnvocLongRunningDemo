@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Text;
 using Envoc.Azure.Common.Persistance;
 using Envoc.Azure.Common.Persistance.Blob;
 using Envoc.Core.UnitTests.Extensions;
@@ -131,6 +133,150 @@ Parameter name: source");
 
                 // Assert
                 result.ShouldNotBeNull();
+            }
+        }
+
+        [TestClass]
+        public class StoreChunkMethod : StorageContextTests
+        {
+            [TestMethod]
+            public void WithNullThrowsException()
+            {
+                // Act
+                Action action = () => target.StoreChunk(null,0,false);
+
+                // Assert
+                action.ShouldThrow<ArgumentNullException>(@"Value cannot be null.
+Parameter name: entity");
+            }
+
+            [TestMethod]
+            public void WithNameEmptyThrowsException()
+            {
+                // Act
+                Action action = () => target.StoreChunk(new DummyFile(), 0, false);
+
+                // Assert
+                action.ShouldThrow<ArgumentNullException>(@"Value cannot be null.
+Parameter name: blobName");
+            }
+
+            [TestMethod]
+            public void WithNullStreamThrowsException()
+            {
+                // Act
+                Action action = () => target.StoreChunk(new DummyFile
+                {
+                    Name = "foo"
+                }, 0, false);
+
+                // Assert
+                action.ShouldThrow<ArgumentNullException>(@"Value cannot be null.
+Parameter name: source");
+            }
+
+            [TestMethod]
+            public void WithNegativeIndexThrowsException()
+            {
+                // Act
+                Action action = () => target.StoreChunk(new DummyFile
+                {
+                    Name = "foo",
+                    Stream = new MemoryStream()
+                }, -1, false);
+
+                // Assert
+                action.ShouldThrow<ArgumentException>(@"Cannot be negative
+Parameter name: blockIndex");
+            }
+
+            [TestMethod]
+            public void WithEmptyStreamThrowsException()
+            {
+                // Act
+                Action action = () => target.StoreChunk(new DummyFile
+                {
+                    Name = "foo",
+                    Stream = new MemoryStream()
+                }, 0, false);
+
+                // Assert
+                action.ShouldThrow<ArgumentException>(@"Stream cannot be empty in block upload
+Parameter name: source");
+            }
+
+            [TestMethod]
+            public void WithValidBlobStores()
+            {
+                // Arrange
+                var blob = new DummyFile
+                {
+                    Name = "foo",
+                    Stream = new MemoryStream(new byte[1])
+                };
+
+                // Act
+                target.StoreChunk(blob, 0, true);
+
+                // Assert
+                target.GetBlob(blob.Name).ShouldNotBeNull();
+            }
+
+            [TestMethod]
+            public void WithWithValidBlobButNotCommitedDoesNotStore()
+            {
+                // Arrange
+                var valueToStore = "a cool message";
+                var bytes = Encoding.UTF8.GetBytes(valueToStore);
+                var name = "foo";
+
+                // Act
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    var blob = new DummyFile
+                    {
+                        Name = name,
+                        Stream = new MemoryStream(new[] { bytes[i] })
+                    };
+
+                    target.StoreChunk(blob, i, false);
+                }
+
+                // Assert
+                var result = target.GetBlob(name);
+                result.ShouldNotBeNull();
+                var buffer = new byte[bytes.Length];
+                result.Stream.Read(buffer, 0, buffer.Length);
+                buffer.SequenceEqual(new byte[buffer.Length]).ShouldBe(true);
+            }
+
+            [TestMethod]
+            public void WithWithValidBlobCommitedDoesStore()
+            {
+                // Arrange
+                var valueToStore = "a cool message";
+                var bytes = Encoding.UTF8.GetBytes(valueToStore);
+                var name = "foo";
+
+                // Act
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    var blob = new DummyFile
+                    {
+                        Name = name,
+                        Stream = new MemoryStream(new[] { bytes[i] })
+                    };
+                    var store = i == bytes.Length - 1;
+                    target.StoreChunk(blob, i, store);
+                }
+
+                // Assert
+                var result = target.GetBlob(name);
+                result.ShouldNotBeNull();
+                var buffer = new byte[bytes.Length];
+                result.Stream.Length.ShouldBe(buffer.Length);
+                result.Stream.Read(buffer, 0, buffer.Length);
+                buffer.SequenceEqual(bytes).ShouldBe(true);
             }
         }
 

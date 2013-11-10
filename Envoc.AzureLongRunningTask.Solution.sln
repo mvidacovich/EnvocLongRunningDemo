@@ -18,6 +18,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "Tests.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envoc.AzureLongRunningTask.Web", "Envoc.AzureLongRunningTask.Web\Envoc.AzureLongRunningTask.Web.csproj", "{031BA97C-C4E4-40B7-AEC7-1C389B68521D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envoc.AzureLongRunningTask.Common", "Envoc.AzureLongRunningTask.Common\Envoc.AzureLongRunningTask.Common.csproj", "{DD45664D-A5B9-4124-86CB-C0374AA47751}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envoc.Common", "Envoc.Common\Envoc.Common.csproj", "{DCC6FDC0-C2E2-4AB6-8D56-5A04925127F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,14 @@ Global
 		{031BA97C-C4E4-40B7-AEC7-1C389B68521D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{031BA97C-C4E4-40B7-AEC7-1C389B68521D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{031BA97C-C4E4-40B7-AEC7-1C389B68521D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD45664D-A5B9-4124-86CB-C0374AA47751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD45664D-A5B9-4124-86CB-C0374AA47751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD45664D-A5B9-4124-86CB-C0374AA47751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD45664D-A5B9-4124-86CB-C0374AA47751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC6FDC0-C2E2-4AB6-8D56-5A04925127F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC6FDC0-C2E2-4AB6-8D56-5A04925127F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC6FDC0-C2E2-4AB6-8D56-5A04925127F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC6FDC0-C2E2-4AB6-8D56-5A04925127F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
