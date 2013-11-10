@@ -10,7 +10,7 @@ namespace Envoc.Azure.Common.Persistance.Queues
         void Enqueue(T message);
         TimeSpan Renew(IQueueEntity<T> entity);
         void MarkCompleted(IQueueEntity<T> entity);
-        int Count();
+        int Count(bool forceRefresh);
 
         /// <summary>
         /// Use with caution, WILL delete everything.

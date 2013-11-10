@@ -137,10 +137,10 @@ namespace Envoc.Azure.Common.Persistance.Queues
             queue.Clear();
         }
 
-        public int Count()
+        public int Count(bool forceRefresh)
         {
             CreateIfNotExist();
-            if (DateTime.UtcNow - lastCountUpdate > countCacheDuration)
+            if (DateTime.UtcNow - lastCountUpdate > countCacheDuration || forceRefresh)
             {
                 lastCountUpdate = DateTime.UtcNow;
                 queue.FetchAttributes();

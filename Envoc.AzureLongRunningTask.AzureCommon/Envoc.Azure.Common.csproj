@@ -73,6 +73,7 @@
     <Compile Include="Persistance\Queues\IQueueContext.cs" />
     <Compile Include="Persistance\Queues\QueueContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\QueueProcessorBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

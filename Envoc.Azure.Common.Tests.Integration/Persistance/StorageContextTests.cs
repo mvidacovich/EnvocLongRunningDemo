@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Envoc.Azure.Common.Persistance;
 using Envoc.Azure.Common.Persistance.Blob;
 using Envoc.Core.UnitTests.Extensions;
@@ -10,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NCrunch.Framework;
 using Tests.Common;
 
-namespace Envoc.Azure.Common.Tests.Integration
+namespace Envoc.Azure.Common.Tests.Integration.Persistance
 {
     [ExclusivelyUses(TestResources.AzureStorage)]
     [TestClass]

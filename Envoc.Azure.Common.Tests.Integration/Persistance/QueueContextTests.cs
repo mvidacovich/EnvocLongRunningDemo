@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NCrunch.Framework;
 using Tests.Common;
 
-namespace Envoc.Azure.Common.Tests.Integration
+namespace Envoc.Azure.Common.Tests.Integration.Persistance
 {
     [ExclusivelyUses(TestResources.AzureQueues)]
     [TestClass]
@@ -61,7 +61,7 @@ namespace Envoc.Azure.Common.Tests.Integration
                 var result = new QueueContext<DummyItem>(new AzureContext());
 
                 // Assert
-                result.Count().ShouldBe(0);
+                result.Count(true).ShouldBe(0);
             }
 
             [TestMethod]
@@ -71,7 +71,7 @@ namespace Envoc.Azure.Common.Tests.Integration
                 var result = new QueueContext<Goodaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa>(new AzureContext());
 
                 // Assert
-                result.Count().ShouldBe(0);
+                result.Count(true).ShouldBe(0);
             }
 
             [TestMethod]
@@ -133,7 +133,7 @@ namespace Envoc.Azure.Common.Tests.Integration
                 // Assert
                 result.ShouldNotBeNull();
                 result.Value.Data.ShouldBe((Int64)ConsoleColor.Red);
-                target.Count().ShouldBe(1);
+                target.Count(true).ShouldBe(1);
             }
         }
 
@@ -146,7 +146,7 @@ namespace Envoc.Azure.Common.Tests.Integration
                 // Arrange
                 target.Enqueue(new DummyItem());
                 target.VisibilityTimeout = TimeSpan.FromSeconds(1);
-                var count = target.Count();
+                var count = target.Count(true);
 
                 // Act
                 var resulta = target.Dequeue();
@@ -167,7 +167,7 @@ namespace Envoc.Azure.Common.Tests.Integration
                 // Arrange
                 target.Enqueue(new DummyItem());
                 target.VisibilityTimeout = TimeSpan.FromSeconds(1);
-                var count = target.Count();
+                var count = target.Count(true);
 
                 // Act
                 var resulta = target.Dequeue();
@@ -189,7 +189,7 @@ namespace Envoc.Azure.Common.Tests.Integration
                 // Arrange
                 target.Enqueue(new DummyItem());
                 target.VisibilityTimeout = TimeSpan.FromSeconds(1);
-                var count = target.Count();
+                var count = target.Count(true);
 
                 // Act
                 var resulta = target.Dequeue();
@@ -404,7 +404,7 @@ Parameter name: messageId");
 
                 // Assert
                 result.ShouldBe(TimeSpan.FromSeconds(1));
-                target.Count().ShouldBe(1);
+                target.Count(true).ShouldBe(1);
             }
 
             [TestMethod]
@@ -420,7 +420,7 @@ Parameter name: messageId");
 
                 // Assert
                 result.ShouldBe(TimeSpan.FromHours(2));
-                target.Count().ShouldBe(1);
+                target.Count(true).ShouldBe(1);
             }
 
             [TestMethod]
@@ -437,7 +437,7 @@ Parameter name: messageId");
 
                 // Assert
                 result.ShouldBe(expected);
-                target.Count().ShouldBe(1);
+                target.Count(true).ShouldBe(1);
             }
         }
 
@@ -453,7 +453,7 @@ Parameter name: messageId");
                 // Assert
                 action.ShouldThrow<ArgumentNullException>(@"Value cannot be null.
 Parameter name: message");
-                target.Count().ShouldBe(0);
+                target.Count(true).ShouldBe(0);
             }
 
             [TestMethod]
@@ -463,7 +463,7 @@ Parameter name: message");
                 target.Enqueue(new DummyItem());
 
                 // Assert
-                target.Count().ShouldBe(1);
+                target.Count(true).ShouldBe(1);
             }
 
             [TestMethod]
@@ -476,7 +476,7 @@ Parameter name: message");
                 });
 
                 // Assert
-                target.Count().ShouldBe(1);
+                target.Count(true).ShouldBe(1);
             }
 
             [TestMethod]
@@ -490,7 +490,7 @@ Parameter name: message");
 
                 // Assert
                 action.ShouldThrow<ArgumentException>("Messages cannot be larger than 65536 bytes.");
-                target.Count().ShouldBe(0);
+                target.Count(true).ShouldBe(0);
             }
         }
     }
