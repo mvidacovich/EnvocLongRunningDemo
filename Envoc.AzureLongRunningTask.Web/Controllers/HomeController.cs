@@ -7,12 +7,14 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize]
         public ActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public string UploadFile(HttpPostedFileBase file, string id, string name, int? chunk, int? chunks)
         {
             if (chunks.HasValue && chunks > 4096)
