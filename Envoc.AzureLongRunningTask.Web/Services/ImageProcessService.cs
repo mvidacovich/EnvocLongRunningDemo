@@ -2,7 +2,6 @@
 using Envoc.AzureLongRunningTask.Common.Models;
 using Envoc.AzureLongRunningTask.Web.Models;
 using Envoc.Common.Data;
-using System.Security.Principal;
 
 namespace Envoc.AzureLongRunningTask.Web.Services
 {
@@ -15,7 +14,7 @@ namespace Envoc.AzureLongRunningTask.Web.Services
             this.queueContext = queueContext;
         }
 
-        public void CreateNewJobFor(IPrincipal user, ProcessImageJob processImageJob)
+        public void CreateNewJobFor(ProcessImageJob processImageJob)
         {
             // Obviously you want to use cryptographically secure RNG here
             processImageJob.ApiKey = "super secret key, shhh";

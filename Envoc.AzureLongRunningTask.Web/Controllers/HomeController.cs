@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading;
-using System.Web;
-using System.Web.Mvc;
-using Envoc.AzureLongRunningTask.Common.Models;
+﻿using Envoc.AzureLongRunningTask.Common.Models;
 using Envoc.AzureLongRunningTask.Web.Models;
 using Envoc.AzureLongRunningTask.Web.Services;
+using System;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Envoc.AzureLongRunningTask.Web.Controllers
 {
@@ -48,7 +47,7 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
 
             if (request.Completed)
             {
-                processService.CreateNewJobFor(User, new ProcessImageJob
+                processService.CreateNewJobFor(new ProcessImageJob
                 {
                     FilePath = request.FilePath,
                     PostbackUrl = Url.Action("FinishUpload"),
@@ -59,6 +58,7 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
             return request.RequestId.ToString();
         }
 
+        [HttpPost]
         public ActionResult FinishUpload()
         {
             throw new NotImplementedException();
