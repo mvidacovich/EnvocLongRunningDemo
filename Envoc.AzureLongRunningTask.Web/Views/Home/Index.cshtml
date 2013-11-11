@@ -34,14 +34,14 @@
             max_file_size: '2048mb',
             chunk_size: '4mb',
             filters: [
-                { title: "Image files", extensions: "png,jpeg,bmp,jpg,tif,tiff" }
+                { title: "Image files", extensions: "png,jpeg,bmp,jpg" }
             ],
             flash_swf_url: 'Content/js/libs/plupload.flash.swf'
         });
         
         var getFileHtml = function (file, imageUrl) {
             if (imageUrl != null) {
-                return '<li id="' + file.id + '">' + file.name + ' has an image</li>';
+                return '<li id="' + file.id + '">' + file.name + '<img src="'+imageUrl+'" style="max-height: 200;"> </li>';
             }
             if (file.percent <= 0) {
                 return '<li id="' + file.id + '">' + file.name + ' waiting to upload</li>';
@@ -81,9 +81,21 @@
         
         // SignalR
         var connection = $.connection('/readernotifications');
-        connection.start();
         connection.received(function (notification) {
             console.log(notification);
+            if (notification.Type != "Completed") {
+                console.log("not a completed notification");
+                return;
+            }
+            var file = allItems[notification.Content.UploadId];
+            if (file == null) {
+                console.log("no related upload id " + notification.UploadId);
+                return;
+            }
+            var li = $('#' + file.id);
+            console.log(li);
+            li.html(getFileHtml(file, notification.Content.ResultUrl));
         });
+        connection.start();
     });
 </script>

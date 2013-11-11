@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Envoc.AzureLongRunningTask.Web.Connections
 {
@@ -11,9 +10,8 @@ namespace Envoc.AzureLongRunningTask.Web.Connections
         private static readonly object ConnectionSync = new object();
         private static readonly Dictionary<string, List<string>> Connections = new Dictionary<string, List<string>>();
 
-        public static void SendMessage(ClientNotification message)
+        public static void SendMessage(string userId, ClientNotification message)
         {
-            var userId = HttpContext.Current.User.Identity.Name;
             var context = GlobalHost.ConnectionManager.GetConnectionContext<ReaderNotifications>();
             var connection = context.Connection;
             var ids = GetConnectionIds(userId);

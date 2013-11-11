@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Models\FileBlob.cs" />
     <Compile Include="Models\ProcessImageJob.cs" />
+    <Compile Include="Models\ResultBlob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

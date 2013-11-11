@@ -1,4 +1,5 @@
 ﻿using Envoc.AzureLongRunningTask.Common.Models;
+using Envoc.AzureLongRunningTask.Web.Connections;
 using Envoc.AzureLongRunningTask.Web.Models;
 using Envoc.AzureLongRunningTask.Web.Services;
 using System;
@@ -18,6 +19,7 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
             this.processService = processService;
         }
 
+        // If you want to actually get here: http://stackoverflow.com/questions/4762538/iis-express-windows-authentication
         [Authorize]
         public ActionResult Index()
         {
@@ -43,25 +45,37 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
                 UserId = User.Identity.Name
             };
 
-            var request = imageUploadService.Process(blockUpload);
+            var result = imageUploadService.Process(blockUpload);
 
-            if (request.Completed)
+            if (result.Completed)
             {
-                processService.CreateNewJobFor(new ProcessImageJob
-                {
-                    FilePath = request.FilePath,
-                    PostbackUrl = Url.Action("FinishUpload"),
-                    RequestId = request.RequestId
-                });
+                processService.CreateNewJobFor(result.RelatedRequest, Url.Action("FinishUpload", null, null, "http"));
             }
 
-            return request.RequestId.ToString();
+            return result.RelatedRequest.RequestId.ToString();
         }
 
         [HttpPost]
-        public ActionResult FinishUpload()
+        public ActionResult FinishUpload(string apikey, string resultpath, Guid requestid)
         {
-            throw new NotImplementedException();
+            var job = processService.CompleteJob(requestid, apikey, resultpath);
+            if (job == null)
+            {
+                //ISSUE: this says we accepted the payload, which really isn't true. 
+                return new EmptyResult();
+            }
+            
+            //ISSUE: passing in the user ID is cheap. we could have a custom authorizer. I'm lazy
+            ReaderNotifications.SendMessage(job.UserId, new ClientNotification
+            {
+                Type = "Completed",
+                Content = new
+                {
+                    job.UploadId,
+                    ResultUrl = processService.GetResultUrl(job)
+                }
+            });
+            return new EmptyResult();
         }
     }
 }

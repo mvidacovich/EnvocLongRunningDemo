@@ -34,7 +34,9 @@ namespace Envoc.AzureLongRunningTask.Web.Services
                     FinishedUploading = false,
                     UploadId = blockUpload.UploadId,
                     UserId = blockUpload.UserId,
-                    LastBlock = -1
+                    LastBlock = -1,
+                    //ISSUE:  Obviously you want to use cryptographically secure RNG here
+                    ApiKey = "super secret key, shhh"
                 };
                 //ISSUE: Really should be unit of work.
                 request = repository.Add(request);
@@ -64,8 +66,7 @@ namespace Envoc.AzureLongRunningTask.Web.Services
             return new ProcessResult
             {
                 Completed = request.FinishedUploading,
-                FilePath = request.FilePath,
-                RequestId = request.RequestId
+                RelatedRequest = request
             };
         }
     }
