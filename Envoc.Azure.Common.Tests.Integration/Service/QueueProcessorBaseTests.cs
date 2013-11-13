@@ -106,9 +106,12 @@ namespace Envoc.Azure.Common.Tests.Integration.Service
                 var taskCount = 10;
                 var tokenSource = new CancellationTokenSource();
                 var tasks = new Task[taskCount];
-                target.QueuePollWait = TimeSpan.FromMilliseconds(10);
                 for (int i = 0; i < taskCount; i++)
                 {
+                    target = new FakeTaskProcessor(new QueueContext<FakeTask>(new AzureContext()))
+                    {
+                        QueuePollWait = TimeSpan.FromMilliseconds(10)
+                    };
                     tasks[i] = target.Run(tokenSource.Token);
                 }
 

@@ -27,6 +27,12 @@ namespace Envoc.AzureLongRunningTask.Web.Connections
             return base.OnConnected(request, connectionId);
         }
 
+        protected override Task OnReconnected(IRequest request, string connectionId)
+        {
+            AddConnection(request, connectionId);
+            return base.OnReconnected(request, connectionId);
+        }
+
         protected override Task OnDisconnected(IRequest request, string connectionId)
         {
             RemoveConnection(request, connectionId);

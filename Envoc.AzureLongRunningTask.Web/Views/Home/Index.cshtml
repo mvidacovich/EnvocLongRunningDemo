@@ -96,6 +96,6 @@
             console.log(li);
             li.html(getFileHtml(file, notification.Content.ResultUrl));
         });
-        connection.start();
+        connection.start({ pingInterval: 60 });
     });
 </script>

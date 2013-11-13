@@ -14,7 +14,9 @@ namespace Envoc.Azure.Common.Service
         // ReSharper restore StaticFieldInGenericType
 
         private readonly IQueueContext<T> queueContext;
+        private readonly object taskSync = new object();
         private TimeSpan queuePollWait = TimeSpan.FromSeconds(10);
+        private Task runningTask;
 
         protected QueueProcessorBase(IQueueContext<T> queueContext)
         {
@@ -29,7 +31,14 @@ namespace Envoc.Azure.Common.Service
 
         public Task Run(CancellationToken runToken)
         {
-            return Task.Factory.StartNew(()=>ProcessLoop(runToken));
+            lock (taskSync)
+            {
+                if (runningTask == null)
+                {
+                    runningTask = Task.Factory.StartNew(() => ProcessLoop(runToken));
+                }
+                return runningTask;
+            }
         }
 
         private void ProcessLoop(CancellationToken runToken)
@@ -81,6 +90,11 @@ namespace Envoc.Azure.Common.Service
                         queueContext.MarkCompleted(job);
                     }
                 }
+            }
+
+            lock (taskSync)
+            {
+                runningTask = null;
             }
         }
 
