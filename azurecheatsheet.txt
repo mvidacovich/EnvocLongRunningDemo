@@ -3,6 +3,8 @@ There's a calculator: http://www.windowsazure.com/en-us/pricing/calculator/?scen
 XS is best processor + RAM / dollar, easy
 XS is limited to 5 Mbs total in/out bandwidth and 20 GB storage
 Small is 100 Mbs
+Walkthrough on choosing types of storage: 
+http://msdn.microsoft.com/en-us/library/hh767287.aspx
 
 Storage account:
 There's a cool explorer: http://azurestorageexplorer.codeplex.com/
@@ -11,7 +13,10 @@ A single storage account can be no larger that 100TB
 Storage space is ALL stored data, including names / metadata (content of all blobs, queues, and tables)
 There are lots of breaking changes between SDK versions. E.g. a 1.6 app can't run on a 2.2 emulator and vice-versa
 A 1.7 app should run on 2.2 emulator, but does not in my experience.
-There are always naming and string restrictions on everything, pretty much.
+The 2.3 and 2.2 SDK can run side by side on a machine, but 2.2 cannot be hosted in a 2.3 environment and vice-versa
+Be sure to check "breaking changes" with each release - it has saved me several times
+
+There are naming and string restrictions on things like blob names, queue names, table PK/RK, etc.
 
 Table storage
 A "no-sql" solution
@@ -67,6 +72,7 @@ P.S. 10x more expensive means that it is a whopping $1.00 / Million transactions
 
 Sources:
 http://msdn.microsoft.com/en-us/library/windowsazure/hh767287.aspx
+http://msdn.microsoft.com/en-us/library/hh767287.aspx
 http://msdn.microsoft.com/en-us/library/windowsazure/jj553018.aspx
 http://msdn.microsoft.com/en-us/library/windowsazure/ee691964.aspx
 http://msdn.microsoft.com/en-us/library/windowsazure/dd179349.aspx
