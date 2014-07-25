@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.WindowsAzure.Storage;
 
-namespace Envoc.Azure.Common.Persistance
+namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance
 {
     public class AzureContext
     {

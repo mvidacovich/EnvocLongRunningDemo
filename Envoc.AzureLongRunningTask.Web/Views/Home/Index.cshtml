@@ -1,101 +1,17 @@
-﻿@model dynamic
-<head>
-    <title>Uploader</title>
-    <link href='/Content/css/app.css' rel='stylesheet' type='text/css'>
-</head>
-
-<body>
-    <div id="uploadContainer">
-        <a id="dropArea" class="drop-area">
-            <h3>Click Or Drag Files Here To Upload...</h3>
+﻿@{
+    ViewBag.Title = "Upload file(s)";
+}
+<br/>
+<div ng-controller="processImageCtrl" ng-cloak>
+    <div class="row" id="uploadContainer">
+        <a id="dropArea" class="text-center" style="position: relative; z-index: 1;">
+            <h3 class="text-center">Click Or Drag Files Here To Upload...</h3>
         </a>
     </div>
-    
-    <div id="waitingUploads">
-        <ul >
-        </ul>
-    </div>
-</body>
+    <ul>
+        <li ng-repeat="message in messages">
+            {{ message }}
+        </li>
+    </ul>
+</div>
 
-<script type="text/javascript" src="/Content/js/libs/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="/Content/js/libs/plupload.full.js"></script>
-<script type="text/javascript" src="/Content/js/libs/jquery.signalR-1.1.3.js"></script>
-<script type="text/javascript">
-    $(function () {
-        // Nice uploader: http://www.plupload.com/
-        var url = '/Home/UploadFile';
-        var allItems = [];
-        var uploader = new plupload.Uploader({
-            runtimes: 'html5,flash',
-            url: url,
-            container: 'uploadContainer',
-            drop_element: 'dropArea',
-            browse_button: 'dropArea',
-            max_file_size: '2048mb',
-            chunk_size: '4mb',
-            filters: [
-                { title: "Image files", extensions: "png,jpeg,bmp,jpg" }
-            ],
-            flash_swf_url: 'Content/js/libs/plupload.flash.swf'
-        });
-        
-        var getFileHtml = function (file, imageUrl) {
-            if (imageUrl != null) {
-                return '<li id="' + file.id + '">' + file.name + '<img src="'+imageUrl+'" style="max-height: 200;"> </li>';
-            }
-            if (file.percent <= 0) {
-                return '<li id="' + file.id + '">' + file.name + ' waiting to upload</li>';
-            }
-            if (file.percent < 100) {
-                return '<li id="' + file.id + '">' + file.name + ' ' +file.percent+'%</li>';
-            }
-            if (file.percent >= 100) {
-                return '<li id="' + file.id + '">' + file.name + ' waiting on image</li>';
-            }
-            return '<li id="' + file.id + '">' + file.name + ' 0%</li>';
-        };
-        
-        uploader.init();
-        
-        uploader.bind('UploadProgress', function (up, file) {
-            var li = $('#' + file.id);
-            li.html(getFileHtml(file, null));
-        });
-
-        uploader.bind('BeforeUpload', function (up, file) {
-            // Give server the id for reference
-            up.settings.url = url + "?id=" + file.id;
-        });
-
-        uploader.bind('FilesAdded', function (up, files) {
-            // add a placeholder in the file list
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-
-                allItems[file.id] = file;
-                $('#waitingUploads ul').append(getFileHtml(file, null));
-            }
-            // Autostart
-            uploader.start();
-        });
-        
-        // SignalR
-        var connection = $.connection('/readernotifications');
-        connection.received(function (notification) {
-            console.log(notification);
-            if (notification.Type != "Completed") {
-                console.log("not a completed notification");
-                return;
-            }
-            var file = allItems[notification.Content.UploadId];
-            if (file == null) {
-                console.log("no related upload id " + notification.UploadId);
-                return;
-            }
-            var li = $('#' + file.id);
-            console.log(li);
-            li.html(getFileHtml(file, notification.Content.ResultUrl));
-        });
-        connection.start({ pingInterval: 60 });
-    });
-</script>

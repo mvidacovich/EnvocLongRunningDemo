@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Envoc.Azure.Common.Models.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Models.Queues;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 
-namespace Envoc.Azure.Common.Persistance.Queues
+namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues
 {
     public class QueueContext<T> : IQueueContext<T>
     {

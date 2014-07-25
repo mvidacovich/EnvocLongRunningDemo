@@ -1,7 +1,7 @@
 ﻿using System;
-using Envoc.Azure.Common.Models.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Models.Queues;
 
-namespace Envoc.Azure.Common.Persistance.Queues
+namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues
 {
     public interface IQueueContext<T>
     {

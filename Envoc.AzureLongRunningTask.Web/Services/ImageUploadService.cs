@@ -1,18 +1,18 @@
-﻿using Envoc.Azure.Common.Persistance.Blob;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob;
 using Envoc.AzureLongRunningTask.Common.Models;
 using Envoc.AzureLongRunningTask.Web.Models;
-using Envoc.Common.Data;
 using System;
-using System.Linq;
 
 namespace Envoc.AzureLongRunningTask.Web.Services
 {
     public class ImageUploadService
     {
-        private readonly IRepository<ProcessRequest> repository;
+        private readonly IList<ProcessRequest> repository;
         private readonly IStorageContext<FileBlob> storageContext;
 
-        public ImageUploadService(IRepository<ProcessRequest> repository, IStorageContext<FileBlob> storageContext)
+        public ImageUploadService(IList<ProcessRequest> repository, IStorageContext<FileBlob> storageContext)
         {
             this.repository = repository;
             this.storageContext = storageContext;
@@ -20,7 +20,7 @@ namespace Envoc.AzureLongRunningTask.Web.Services
 
         public ProcessResult Process(BlockUpload blockUpload)
         {
-            var request = repository.Entities.FirstOrDefault(x => x.UserId == blockUpload.UserId && x.UploadId == blockUpload.UploadId);
+            var request = repository.FirstOrDefault(x => x.UserId == blockUpload.UserId && x.UploadId == blockUpload.UploadId);
             if (request == null)
             {
                 var requestId = Guid.NewGuid();
@@ -38,8 +38,9 @@ namespace Envoc.AzureLongRunningTask.Web.Services
                     //ISSUE:  Obviously you want to use cryptographically secure RNG here
                     ApiKey = "super secret key, shhh"
                 };
-                //ISSUE: Really should be unit of work.
-                request = repository.Add(request);
+
+                //ISSUE: This would be a database call w/UOW considered
+                repository.Add(request);
             }
 
             if (request.LastBlock >= blockUpload.BlockIndex)

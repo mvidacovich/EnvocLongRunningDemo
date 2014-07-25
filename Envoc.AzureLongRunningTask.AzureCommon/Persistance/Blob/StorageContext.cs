@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Envoc.Azure.Common.Persistance.Blob
+namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob
 {
     public class StorageContext<T> : IStorageContext<T> where T : IFileBlob, new()
     {

@@ -1,20 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Envoc.Azure.Common.Persistance.Blob;
-using Envoc.Azure.Common.Persistance.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues;
 using Envoc.AzureLongRunningTask.Common.Models;
 using Envoc.AzureLongRunningTask.Web.Models;
-using Envoc.Common.Data;
 
 namespace Envoc.AzureLongRunningTask.Web.Services
 {
     public class ImageProcessService
     {
         private readonly IQueueContext<ProcessImageJob> queueContext;
-        private readonly IRepository<ProcessRequest> processRequest;
+        private readonly IList<ProcessRequest> processRequest;
         private readonly IStorageContext<ResultBlob> resultStorageContext;
 
-        public ImageProcessService(IQueueContext<ProcessImageJob> queueContext, IRepository<ProcessRequest> processRequest, IStorageContext<ResultBlob> resultStorageContext)
+        public ImageProcessService(IQueueContext<ProcessImageJob> queueContext, IList<ProcessRequest> processRequest, IStorageContext<ResultBlob> resultStorageContext)
         {
             this.queueContext = queueContext;
             this.processRequest = processRequest;
@@ -34,7 +34,7 @@ namespace Envoc.AzureLongRunningTask.Web.Services
 
         public ProcessRequest CompleteJob(Guid requestid, string apikey, string resultpath)
         {
-            var request = processRequest.Entities.FirstOrDefault(x => x.RequestId == requestid && x.ApiKey == apikey);
+            var request = processRequest.FirstOrDefault(x => x.RequestId == requestid && x.ApiKey == apikey);
             if (request == null)
             {
                 return null;

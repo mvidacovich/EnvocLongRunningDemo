@@ -1,9 +1,8 @@
 ﻿using System;
-using Envoc.Common.Data;
 
 namespace Envoc.AzureLongRunningTask.Web.Models
 {
-    public class ProcessRequest : IIdentifiable
+    public class ProcessRequest 
     {
         public int Id { get; set; }
 

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Envoc.Azure.Common.Persistance.Blob;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob;
 
 namespace Envoc.AzureLongRunningTask.Common.Models
 {

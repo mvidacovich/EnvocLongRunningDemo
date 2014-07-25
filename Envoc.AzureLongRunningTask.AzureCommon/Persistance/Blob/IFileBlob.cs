@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Envoc.Azure.Common.Persistance.Blob
+namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob
 {
     public interface IFileBlob
     {
