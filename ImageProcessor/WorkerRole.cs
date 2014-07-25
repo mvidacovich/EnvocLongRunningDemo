@@ -1,38 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues;
+using Envoc.AzureLongRunningTask.Common.Models;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
+using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ImageProcessor
 {
     public class WorkerRole : RoleEntryPoint
     {
+        private ProcessImageJobService processor;
+        private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private Task task;
+
         public override void Run()
         {
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("ImageProcessor entry point called");
+            task = processor.Run(cancellationTokenSource.Token);
+            Task.WaitAll(task);
+        }
 
-            while (true)
-            {
-                Thread.Sleep(10000);
-                Trace.TraceInformation("Working");
-            }
+        public override void OnStop()
+        {
+            cancellationTokenSource.Cancel();
+            Task.WaitAll(task);
+            base.OnStop();
         }
 
         public override bool OnStart()
         {
-            // Set the maximum number of concurrent connections 
-            ServicePointManager.DefaultConnectionLimit = 12;
+            // Load your favorite production connection string, ect
+            var context = new AzureContext();
+            processor = new ProcessImageJobService(
+                new QueueContext<ProcessImageJob>(context),
+                new StorageContext<FileBlob>(context),
+                new StorageContext<ResultBlob>(context));
 
-            // For information on handling configuration changes
-            // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
-
+            // It costs money to poll, ~$1 per 10 million requets, just FYI
+            processor.QueuePollWait = TimeSpan.FromSeconds(1);
             return base.OnStart();
         }
     }

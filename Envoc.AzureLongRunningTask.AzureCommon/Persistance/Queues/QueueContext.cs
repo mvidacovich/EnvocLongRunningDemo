@@ -1,9 +1,9 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using Envoc.AzureLongRunningTask.AzureCommon.Models.Queues;
+﻿using Envoc.AzureLongRunningTask.AzureCommon.Models.Queues;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using System;
+using System.Text.RegularExpressions;
 
 namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues
 {
