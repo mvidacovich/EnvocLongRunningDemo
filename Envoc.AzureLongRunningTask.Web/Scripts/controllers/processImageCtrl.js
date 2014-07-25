@@ -36,8 +36,14 @@
 
         };
 
+        $scope.uploader.bind('BeforeUpload', function (up, file) {
+            // Give server the id for reference
+            up.settings.url = cleanUrl + "?id=" + file.id;
+        });
+
         $scope.uploader = new plupload.Uploader(settings);
         $scope.uploader.init();
+
 
         $scope.uploader.bind('FilesAdded', function (up, files) {
             $scope.uploader.start();
