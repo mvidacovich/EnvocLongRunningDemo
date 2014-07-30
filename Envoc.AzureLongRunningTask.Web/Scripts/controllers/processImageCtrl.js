@@ -99,9 +99,9 @@
 
         var settings = {
             runtimes: runtime,
-            url: '/',
+            url: directUploadUrl,
             max_file_size: '2048mb', // Limit in storage emulator
-            chunk_size: '64kb',
+            chunk_size: '1mb',
             container: 'uploadContainer',
             method: 'put',
             drop_element: 'dropArea',
@@ -113,20 +113,20 @@
             filters: [
                 { title: "Image files", extensions: "gif,jpg,png,jpeg,pdf,tiff,tif,bmp" }
             ],
-            silverlight_xap_url: 'Scripts/Moxie.xap',
             flash_swf_url: 'Scripts/Moxie.swf',
         };
         if (runtime == "flash" || runtime == 'html4') {
             // Non-CORS runtimes :(
             settings.multipart = true;
             settings.headers = null;
-            settings.method = 'POST';
+            settings.method = 'post';
             if (runtime == 'html4') {
                 settings.max_file_size = '4mb'; // Poor limit for html4, since it has no chunking
             } else {
                 settings.max_file_size = '400mb'; // Flash upload limit, chunking but loads file into memory
             }
         }
+
         $scope.uploader = new plupload.Uploader(settings);
         $scope.uploader.init();
 

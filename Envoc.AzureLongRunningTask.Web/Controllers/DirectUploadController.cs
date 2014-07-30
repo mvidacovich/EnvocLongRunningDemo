@@ -21,7 +21,7 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
         [HttpPost]
         public string UploadFile(HttpPostedFileBase file, string id, string name, int? chunk, int? chunks)
         {
-            if (chunks.HasValue && chunks > 512 || chunk.HasValue && chunk >= 512)
+            if (chunks.HasValue && chunks >= 2048 || chunk.HasValue && chunk >= 2047)
             {
                 throw new NotSupportedException("The file is too large.");
             }
