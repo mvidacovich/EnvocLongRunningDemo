@@ -21,14 +21,8 @@ namespace Envoc.AzureLongRunningTask.Web.Services
         public ProcessResult Process(BlockUpload blockUpload)
         {
             var request = GetOrCreateRequest(blockUpload);
-            if (request.LastBlock >= blockUpload.BlockIndex)
-            {
-                throw new ArgumentException("Block index invalid, upload is out of order");
-            }
 
             //ISSUE: Concurrency issue could cause shennanigans if something messes up on client / blocks are uploaded out of order
-            request.LastBlock = blockUpload.BlockIndex;
-
             var file = new FileBlob
             {
                 Name = request.FilePath,
@@ -49,6 +43,16 @@ namespace Envoc.AzureLongRunningTask.Web.Services
             };
         }
 
+        public ProcessRequest FinalizeChunks(BlockUpload uploadChunk)
+        {
+            var request = repository.Single(x => x.UserId == uploadChunk.UserId && x.UploadId == uploadChunk.UploadId && !x.FinishedUploading);
+            request.FinishedUploading = true;
+
+            var path = request.FilePath;
+            storageContext.CommitChunks(path, uploadChunk.Chunks);
+            return request;
+        }
+
         public string GetUploadPath(BlockUpload uploadChunk)
         {
             var request = GetOrCreateRequest(uploadChunk);
@@ -57,7 +61,7 @@ namespace Envoc.AzureLongRunningTask.Web.Services
 
         private ProcessRequest GetOrCreateRequest(BlockUpload blockUpload)
         {
-            var request = repository.FirstOrDefault(x => x.UserId == blockUpload.UserId && x.UploadId == blockUpload.UploadId);
+            var request = repository.SingleOrDefault(x => x.UserId == blockUpload.UserId && x.UploadId == blockUpload.UploadId);
             if (request == null)
             {
                 var requestId = Guid.NewGuid();
@@ -71,7 +75,6 @@ namespace Envoc.AzureLongRunningTask.Web.Services
                     FinishedUploading = false,
                     UploadId = blockUpload.UploadId,
                     UserId = blockUpload.UserId,
-                    LastBlock = -1,
                     //ISSUE:  Obviously you want to use cryptographically secure RNG here
                     ApiKey = "super secret key, shhh"
                 };

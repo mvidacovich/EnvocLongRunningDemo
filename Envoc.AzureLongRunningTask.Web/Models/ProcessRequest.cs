@@ -15,8 +15,6 @@ namespace Envoc.AzureLongRunningTask.Web.Models
         public string ApiKey { get; set; }
         public bool FinishedUploading { get; set; }
 
-        public int LastBlock { get; set; }
-
         public string ResultPath { get; set; }
         public bool GotResult { get; set; }
     }

@@ -127,6 +127,13 @@ namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob
             return blob.Uri.AbsoluteUri + sas;
         }
 
+        public void CommitChunks(string name, string[] chunks)
+        {
+            CreateIfNotExist();
+            var blob = container.GetBlockBlobReference(name);
+            blob.PutBlockList(chunks);
+        }
+
         private static void ValidateEntity(T entity)
         {
             if (ReferenceEquals(entity,null))

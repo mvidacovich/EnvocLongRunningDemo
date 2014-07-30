@@ -29,7 +29,7 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
                 Type = "Completed",
                 Content = new
                 {
-                    job.UploadId,
+                    job.RequestId,
                     ResultUrl = processService.GetResultUrl(job)
                 }
             });

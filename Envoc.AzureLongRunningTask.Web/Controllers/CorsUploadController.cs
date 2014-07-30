@@ -15,11 +15,13 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
     {
         private readonly AzureContext storageCredentials;
         private readonly ImageUploadService uploadService;
+        private readonly ImageProcessService processService;
 
-        public CorsUploadController(AzureContext storageCredentials, ImageUploadService uploadService)
+        public CorsUploadController(AzureContext storageCredentials, ImageUploadService uploadService, ImageProcessService processService)
         {
             this.storageCredentials = storageCredentials;
             this.uploadService = uploadService;
+            this.processService = processService;
         }
 
         [HttpGet]
@@ -37,10 +39,25 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
             return GetUrl(path);
         }
 
+        [HttpPost]
+        public string CompleteUpload(BlockUpload block)
+        {
+            var uploadChunk = new BlockUpload
+            {
+                UploadId = block.UploadId,
+                Chunks = block.Chunks,
+                UserId = User.Identity.Name
+            };
+            var request = uploadService.FinalizeChunks(uploadChunk);
+            processService.CreateNewJobFor(request, Url.Action("FinishUpload", "Callback", null, "http"));
+
+            return request.RequestId.ToString();
+        }
+
         private string GetUrl(string name)
         {
             var blobClient = storageCredentials.Account.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference("FileBlob");
+            var container = blobClient.GetContainerReference("fileblob");
             var blob = container.GetBlockBlobReference(name);
 
             // ISSUE: 1 minute window may be too large or small - depending on use case

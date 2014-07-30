@@ -8,5 +8,6 @@ namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob
         void StoreChunk(T entity, int blockIndex, bool finalize);
         T GetBlob(string name);
         string GetPublicReadUrl(string name, TimeSpan length);
+        void CommitChunks(string name, string[] chunks);
     }
 }

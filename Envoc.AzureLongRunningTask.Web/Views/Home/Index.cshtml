@@ -4,14 +4,28 @@
 <br/>
 <div ng-controller="processImageCtrl" ng-cloak>
     <div class="row" id="uploadContainer">
-        <a id="dropArea" class="text-center" style="position: relative; z-index: 1;">
-            <h3 class="text-center">Click Or Drag Files Here To Upload...</h3>
-        </a>
+        <div id="dropArea" class="text-center col-sm-12">
+            <button id="clickButton" type="button" class="btn btn-default">
+                Click Or Drag Files Here To Upload...
+            </button>
+        </div>
     </div>
-    <ul>
-        <li ng-repeat="message in messages">
-            {{ message }}
-        </li>
-    </ul>
+
+    <div class="row text-center">
+        <div class="col-sm-3" ng-repeat="file in files" style="padding: 10px;" ng-cloak>
+            <div ng-hide="file.resultUrl">
+                <p>Name: {{ file.name }}</p>
+                <p>Size: {{ (file.size / 1024) | number : 2 }}kb</p>
+                <img data-src="holder.js/200x200" bs-holder />
+            </div>
+            <div ng-show="file.resultUrl">
+                <p>Name: {{ file.name }}</p>
+                <p>Size: {{ (file.size / 1024) | number : 2 }}kb</p>
+                <a href="{{file.resultUrl}}" target="_blank">
+                    <img ng-src="{{file.resultUrl}}" width="200" height="200" />
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
