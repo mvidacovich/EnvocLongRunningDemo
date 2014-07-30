@@ -8949,9 +8949,7 @@ define("moxie/runtime/flash/Runtime", [
 				return value && I.mode === 'browser';
 			},
 			send_multipart: Runtime.capTrue,
-			slice_blob: function(value) {
-				return value && I.mode === 'browser';
-			},
+			slice_blob: Runtime.capTrue,
 			stream_upload: function(value) {
 				return value && I.mode === 'browser';
 			},
