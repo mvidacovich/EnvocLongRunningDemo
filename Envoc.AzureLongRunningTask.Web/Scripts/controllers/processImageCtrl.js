@@ -68,7 +68,7 @@
             if (runtime == "flash" || runtime == 'html4') {
                 file.url = directUploadUrl + "?id=" + file.id;
                 file.status = plupload.QUEUED;
-                $rootScope.uploader.start();
+                $scope.uploader.start();
                 return;
             }
 
@@ -140,6 +140,7 @@
                 file.status = plupload.WAITING_FOR_URL;
                 processFile(file);
                 $scope.files.push(file);
+                $scope.$apply();
             }
         });
 
@@ -156,6 +157,11 @@
         });
 
         $scope.uploader.bind('FileUploaded', function (up, file, info) {
+
+            // In non CORS web server responds with text value on completetion
+            if (info && info.response) {
+                file.requestId = info.response;
+            }
             _.each(up.files, function (item) {
                 if (item.status == plupload.WAITING_FOR_URL) {
                     processFile(item);
@@ -187,6 +193,7 @@
                 });
             } else {
                 file.status = plupload.DONE;
+                $scope.$apply();
             }
         });
 
