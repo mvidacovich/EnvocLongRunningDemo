@@ -1,12 +1,12 @@
 ﻿using Envoc.AzureLongRunningTask.Web.Models;
 using Envoc.AzureLongRunningTask.Web.Services;
 using System;
-using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 
 namespace Envoc.AzureLongRunningTask.Web.Controllers
 {
+    [Authorize]
     public class DirectUploadController : Controller
     {
         private readonly ImageUploadService imageUploadService;
@@ -19,7 +19,6 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public string UploadFile(HttpPostedFileBase file, string id, string name, int? chunk, int? chunks)
         {
             if (chunks.HasValue && chunks > 512 || chunk.HasValue && chunk >= 512)
@@ -37,37 +36,16 @@ namespace Envoc.AzureLongRunningTask.Web.Controllers
                 UserId = User.Identity.Name
             };
 
+            // Send block to azure
             var result = imageUploadService.Process(blockUpload);
 
             if (result.Completed)
             {
-                processService.CreateNewJobFor(result.RelatedRequest, Url.Action("FinishUpload", null, null, "http"));
+                // Add job to azure queue
+                processService.CreateNewJobFor(result.RelatedRequest, Url.Action("FinishUpload", "Callback", null, "http"));
             }
 
             return result.RelatedRequest.RequestId.ToString();
-        }
-
-        [HttpPost]
-        public ActionResult FinishUpload(string apikey, string resultpath, Guid requestid)
-        {
-            var job = processService.CompleteJob(requestid, apikey, resultpath);
-            if (job == null)
-            {
-                //ISSUE: this says we accepted the payload, which really isn't true. 
-                return new EmptyResult();
-            }
-
-            //ISSUE: passing in the user ID is cheap. we could have a custom authorizer. I'm lazy
-            NotificationHub.SendNotification(job.UserId, new ClientNotification
-            {
-                Type = "Completed",
-                Content = new
-                {
-                    job.UploadId,
-                    ResultUrl = processService.GetResultUrl(job)
-                }
-            });
-            return new EmptyResult();
         }
     }
 }

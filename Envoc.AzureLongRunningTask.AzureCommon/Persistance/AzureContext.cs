@@ -5,7 +5,7 @@ namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance
 {
     public class AzureContext
     {
-        internal CloudStorageAccount Account { get; private set; }
+        public CloudStorageAccount Account { get; private set; }
 
         public AzureContext(string connectionString)
         {

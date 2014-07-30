@@ -25,6 +25,7 @@ namespace Envoc.AzureLongRunningTask.Web
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
                       "~/Scripts/moxie.js",
+                      "~/Scripts/underscore.js",
                       "~/Scripts/plupload.dev.js",
                       "~/Scripts/jquery.signalR-2.1.0.js"));
 
