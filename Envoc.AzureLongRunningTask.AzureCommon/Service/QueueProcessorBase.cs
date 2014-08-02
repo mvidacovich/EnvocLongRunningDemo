@@ -1,10 +1,10 @@
-﻿using Envoc.Azure.Common.Models.Queues;
-using Envoc.Azure.Common.Persistance.Queues;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Envoc.AzureLongRunningTask.AzureCommon.Models.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues;
 
-namespace Envoc.Azure.Common.Service
+namespace Envoc.AzureLongRunningTask.AzureCommon.Service
 {
     public abstract class QueueProcessorBase<T>
     {

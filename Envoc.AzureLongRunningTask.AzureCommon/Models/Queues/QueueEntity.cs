@@ -1,4 +1,4 @@
-﻿namespace Envoc.Azure.Common.Models.Queues
+﻿namespace Envoc.AzureLongRunningTask.AzureCommon.Models.Queues
 {
     internal class QueueEntity<T> : IQueueEntity<T>
     {

@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Envoc.Azure.Common.Persistance.Blob
+namespace Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob
 {
     public class StorageContext<T> : IStorageContext<T> where T : IFileBlob, new()
     {
@@ -125,6 +125,13 @@ namespace Envoc.Azure.Common.Persistance.Blob
             });
 
             return blob.Uri.AbsoluteUri + sas;
+        }
+
+        public void CommitChunks(string name, string[] chunks)
+        {
+            CreateIfNotExist();
+            var blob = container.GetBlockBlobReference(name);
+            blob.PutBlockList(chunks);
         }
 
         private static void ValidateEntity(T entity)

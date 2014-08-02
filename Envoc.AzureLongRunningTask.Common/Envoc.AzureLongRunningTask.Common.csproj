@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DD45664D-A5B9-4124-86CB-C0374AA47751}</ProjectGuid>
+    <ProjectGuid>{0D72665E-7123-4ECE-ADBB-CF9DCB985286}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Envoc.AzureLongRunningTask.Common</RootNamespace>
     <AssemblyName>Envoc.AzureLongRunningTask.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -45,9 +45,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Envoc.AzureLongRunningTask.AzureCommon\Envoc.Azure.Common.csproj">
-      <Project>{A58D130E-5A60-44D8-A9BD-CA6A60AB8257}</Project>
-      <Name>Envoc.Azure.Common</Name>
+    <ProjectReference Include="..\Envoc.AzureLongRunningTask.AzureCommon\Envoc.AzureLongRunningTask.AzureCommon.csproj">
+      <Project>{49080633-47c0-4f41-a264-59f35b188eaa}</Project>
+      <Name>Envoc.AzureLongRunningTask.AzureCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

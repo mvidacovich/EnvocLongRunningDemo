@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ImageProcessor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Windows User")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ImageProcessor")]
-[assembly: AssemblyCopyright("Copyright © Windows User 2013")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4c43d751-7c9a-4094-a5aa-87590e7b028c")]
+[assembly: Guid("84e5393d-9217-4ab2-8c0a-d3165cee964a")]
 
 // Version information for an assembly consists of the following four values:
 //

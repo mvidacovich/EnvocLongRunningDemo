@@ -1,16 +1,16 @@
+using Envoc.AzureLongRunningTask.AzureCommon.Models.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Service;
+using Envoc.AzureLongRunningTask.Common.Models;
+using RestSharp;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
-using Envoc.Azure.Common.Models.Queues;
-using Envoc.Azure.Common.Persistance.Blob;
-using Envoc.Azure.Common.Persistance.Queues;
-using Envoc.Azure.Common.Service;
-using Envoc.AzureLongRunningTask.Common.Models;
 using System.Threading;
-using RestSharp;
 
 namespace ImageProcessor
 {
@@ -74,7 +74,6 @@ namespace ImageProcessor
                 Trace.TraceError(ex.Message);
                 return false;
             }
-
         }
 
         private static Bitmap GetBitmap(IFileBlob imageBlob)

@@ -1,9 +1,8 @@
 ﻿using System;
-using Envoc.Common.Data;
 
 namespace Envoc.AzureLongRunningTask.Web.Models
 {
-    public class ProcessRequest : IIdentifiable
+    public class ProcessRequest 
     {
         public int Id { get; set; }
 
@@ -15,8 +14,6 @@ namespace Envoc.AzureLongRunningTask.Web.Models
         public string FilePath { get; set; }
         public string ApiKey { get; set; }
         public bool FinishedUploading { get; set; }
-
-        public int LastBlock { get; set; }
 
         public string ResultPath { get; set; }
         public bool GotResult { get; set; }

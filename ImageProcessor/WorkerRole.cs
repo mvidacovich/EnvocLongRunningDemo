@@ -1,6 +1,6 @@
-using Envoc.Azure.Common.Persistance;
-using Envoc.Azure.Common.Persistance.Blob;
-using Envoc.Azure.Common.Persistance.Queues;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Blob;
+using Envoc.AzureLongRunningTask.AzureCommon.Persistance.Queues;
 using Envoc.AzureLongRunningTask.Common.Models;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using System;

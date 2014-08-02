@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Envoc.AzureLongRunningTask.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Windows User")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Envoc.AzureLongRunningTask.Common")]
-[assembly: AssemblyCopyright("Copyright © Windows User 2013")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e132337c-bb6a-4fe6-aa55-a462c62f7f93")]
+[assembly: Guid("4f6ad8dc-8f29-48c7-bd2e-76ec96a44c45")]
 
 // Version information for an assembly consists of the following four values:
 //
