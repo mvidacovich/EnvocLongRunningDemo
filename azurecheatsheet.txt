@@ -1,0 +1,83 @@
+Azure:
+There's a calculator: http://www.windowsazure.com/en-us/pricing/calculator/?scenario=full
+XS is best processor + RAM / dollar, easy
+XS is limited to 5 Mbs total in/out bandwidth and 20 GB storage
+Small is 100 Mbs
+Walkthrough on choosing types of storage: 
+http://msdn.microsoft.com/en-us/library/hh767287.aspx
+
+Storage account:
+There's a cool explorer: http://azurestorageexplorer.codeplex.com/
+Storage accounts are Blobs, Azure Queues, and Table storage
+A single storage account can be no larger that 100TB
+Storage space is ALL stored data, including names / metadata (content of all blobs, queues, and tables)
+There are lots of breaking changes between SDK versions. E.g. a 1.6 app can't run on a 2.2 emulator and vice-versa
+A 1.7 app should run on 2.2 emulator, but does not in my experience.
+The 2.3 and 2.2 SDK can run side by side on a machine, but 2.2 cannot be hosted in a 2.3 environment and vice-versa
+Be sure to check "breaking changes" with each release - it has saved me several times
+
+There are naming and string restrictions on things like blob names, queue names, table PK/RK, etc.
+
+Table storage
+A "no-sql" solution
+No relationships
+No joining
+Max total "row" size: 1MB Including PartitionKey, RowKey, Timestamp.
+Max single column size: 64K (max 252 columns per row)
+Max number of rows returned in a single request: 1000
+you will not get rows between partition keys
+some transaction support (100 actions max)
+Max table size: 100TB (per storage account)
+
+Blob storage
+Doesn't support direct client uploads (CORS)
+A handy file storage mechanism 
+Two major types
+-Block blobs
+Ordered writing / reading 
+Uploads are done per block, 
+4MB max per block
+2GB max per blob (in emulator)
+200GB max per blob (in production)
+50,000 max blocks per blob
+CORS support added in storage client 3.0 (2013-08-15 protocol)
+CORS support in the emulator added 2.2 of emulator
+
+-Page blobs
+Random writing / reading
+Think internet stream
+512 byte segments as pages
+up to 4MB written at once
+max size of 1TB total
+Size must be predefined (if you allocate 1TB then you're charged for that 1TB)
+
+Azure queues
+Queue message: 64K
+if NOT xml-safe: 48K (because automatic base64)
+At-Least-Once
+NOT guaranteed ordering
+Max message lifetime: 7 days
+Max size of a queue: 100TB (as part of the storage account)
+Get Length is approximate
+
+Azure service bus
+Queue message: 256k 
+Max header: 64K again / 48K XML-safe thing
+Exactly-once
+ARE guaranteed ordering
+Max message lifetime: forever
+Max size of a bus: 5GB (configured @ creation)
+Get length is exact
+
+If you need at most once / guaranteed ordering use service bus queues (10x more expensive though)
+P.S. 10x more expensive means that it is a whopping $1.00 / Million transactions, rather than $0.10 / 1 Million
+
+Sources:
+http://msdn.microsoft.com/en-us/library/windowsazure/hh767287.aspx
+http://msdn.microsoft.com/en-us/library/hh767287.aspx
+http://msdn.microsoft.com/en-us/library/windowsazure/jj553018.aspx
+http://msdn.microsoft.com/en-us/library/windowsazure/ee691964.aspx
+http://msdn.microsoft.com/en-us/library/windowsazure/dd179349.aspx
+http://blogs.msdn.com/b/windowsazurestorage/archive/2014/02/03/windows-azure-storage-introducing-cors.aspx
+http://msdn.microsoft.com/en-us/library/ee758358.aspx
+http://msdn.microsoft.com/en-us/library/windowsazure/dn459835.aspx#BKMK_knownIssues
