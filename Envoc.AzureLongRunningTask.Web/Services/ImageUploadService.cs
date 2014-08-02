@@ -47,9 +47,11 @@ namespace Envoc.AzureLongRunningTask.Web.Services
         {
             var request = repository.Single(x => x.UserId == uploadChunk.UserId && x.UploadId == uploadChunk.UploadId && !x.FinishedUploading);
             request.FinishedUploading = true;
-
-            var path = request.FilePath;
-            storageContext.CommitChunks(path, uploadChunk.Chunks);
+            if (uploadChunk.Chunks != null && uploadChunk.Chunks.Any())
+            {
+                var path = request.FilePath;
+                storageContext.CommitChunks(path, uploadChunk.Chunks);
+            }
             return request;
         }
 
