@@ -1,4 +1,6 @@
-EnvocLongRunningDemo
+Envoc Long Running Demo
 ====================
 
-For the Nov 13th 2013 Baton Rouge .Net User Group meeting
+Showing CORS, Azure Storage, SignalR, and multi-runtime access.
+
+Note, all nuget packages and plupload are under their own licence.
